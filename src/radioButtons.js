@@ -5,10 +5,17 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
+import { red } from "@material-ui/core/colors";
 
 const useStyles = makeStyles(theme => ({
   formControl: {
-    margin: theme.spacing(3)
+    margin: theme.spacing(1)
+  },
+  radio: {
+    display: "none"
+  },
+  formControlLabel: {
+    color: "red"
   }
 }));
 
@@ -30,8 +37,18 @@ export default function RadioButtonsGroup() {
           value={value}
           onChange={handleChange}
         >
-          <FormControlLabel value="female" control={<Radio />} label="Female" />
-          <FormControlLabel value="male" control={<Radio />} label="Male" />
+          <FormControlLabel
+            value="female"
+            control={<Radio className={classes.radio} />}
+            label="Female"
+            className={classes.formControlLabel}
+          />
+          <FormControlLabel
+            value="male"
+            control={<Radio className={classes.radio} />}
+            label="Male"
+            className={classes.formControlLabel}
+          />
         </RadioGroup>
       </FormControl>
     </div>
