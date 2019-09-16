@@ -5,10 +5,12 @@
   },
   "description": "https://github.com/mui-org/material-ui/blob/master/docs/src/pages/styles/basics/StyledComponents.js",
   "dependencies": {
-    "react-dom": "latest",
-    "react": "latest",
+    "@material-ui/core": "latest",
+    "@material-ui/icons": "4.4.1",
+    "@material-ui/lab": "4.0.0-alpha.26",
     "@material-ui/styles": "latest",
-    "@material-ui/core": "latest"
+    "react": "latest",
+    "react-dom": "latest"
   },
   "name": "material-demo",
   "version": "0.0.0",
