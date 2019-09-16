@@ -1,11 +1,8 @@
 import React from "react";
-import FormatAlignLeftIcon from "@material-ui/icons/FormatAlignLeft";
-import FormatAlignCenterIcon from "@material-ui/icons/FormatAlignCenter";
-import FormatAlignRightIcon from "@material-ui/icons/FormatAlignRight";
-import FormatAlignJustifyIcon from "@material-ui/icons/FormatAlignJustify";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import { makeStyles } from "@material-ui/core/styles";
+import { styled } from "@material-ui/styles";
 
 const useStyles = makeStyles(theme => ({
   toggleContainer: {
@@ -14,10 +11,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function MySuperCoolToggleButtons() {
-  const [alignment, setAlignment] = React.useState("left");
+  const [timeSlot, chooseTimeSlot] = React.useState(1);
 
-  const handleAlignment = (event, newAlignment) => {
-    setAlignment(newAlignment);
+  const handleTimeSelection = (event, newAlignment) => {
+    chooseTimeSlot(newAlignment);
   };
 
   const classes = useStyles();
@@ -25,23 +22,24 @@ export default function MySuperCoolToggleButtons() {
   console.log("hi");
   return (
     <div className={classes.toggleContainer}>
+      <p>hi</p>
       <ToggleButtonGroup
-        value={alignment}
+        value={timeSlot}
         exclusive
-        onChange={handleAlignment}
+        onChange={handleTimeSelection}
         aria-label="text alignment"
       >
-        <ToggleButton value="left" aria-label="left aligned">
-          <FormatAlignLeftIcon />
+        <ToggleButton value={1} aria-label="left aligned">
+          <span>7:30am</span>
         </ToggleButton>
-        <ToggleButton value="center" aria-label="centered">
-          <FormatAlignCenterIcon />
+        <ToggleButton value={2} aria-label="centered">
+          <span>8:30am</span>
         </ToggleButton>
-        <ToggleButton value="right" aria-label="right aligned">
-          <FormatAlignRightIcon />
+        <ToggleButton value={3} aria-label="right aligned">
+          <span>9:30am</span>
         </ToggleButton>
-        <ToggleButton value="justify" aria-label="justified" disabled>
-          <FormatAlignJustifyIcon />
+        <ToggleButton value={4} aria-label="justified" disabled>
+          <span>10:30am</span>
         </ToggleButton>
       </ToggleButtonGroup>
     </div>
