@@ -5,7 +5,6 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
-import { red } from "@material-ui/core/colors";
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -15,7 +14,8 @@ const useStyles = makeStyles(theme => ({
     display: "none"
   },
   formControlLabel: {
-    color: "red"
+    color: "red",
+    border: "1px solid palevioletred"
   }
 }));
 
@@ -39,7 +39,9 @@ export default function RadioButtonsGroup() {
         >
           <FormControlLabel
             value="female"
-            control={<Radio className={classes.radio} />}
+            control={
+              <Radio className="MuiButtonBase-root MuiButton-outlined" />
+            }
             label="Female"
             className={classes.formControlLabel}
           />
