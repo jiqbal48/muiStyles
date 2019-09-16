@@ -10,6 +10,16 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const MyTogun = styled(ToggleButton)({
+  background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+  border: 0,
+  borderRadius: 3,
+  boxShadow: "0 3px 5px 2px rgba(255, 105, 135, .3)",
+  color: "white",
+  height: 48,
+  padding: "0 30px"
+});
+
 export default function MySuperCoolToggleButtons() {
   const [timeSlot, chooseTimeSlot] = React.useState(1);
 
@@ -29,18 +39,18 @@ export default function MySuperCoolToggleButtons() {
         onChange={handleTimeSelection}
         aria-label="text alignment"
       >
-        <ToggleButton value={1} aria-label="left aligned">
+        <MyTogun value={1} aria-label="left aligned">
           <span>7:30am</span>
-        </ToggleButton>
-        <ToggleButton value={2} aria-label="centered">
+        </MyTogun>
+        <MyTogun value={2} aria-label="centered">
           <span>8:30am</span>
-        </ToggleButton>
-        <ToggleButton value={3} aria-label="right aligned">
+        </MyTogun>
+        <MyTogun value={3} aria-label="right aligned">
           <span>9:30am</span>
-        </ToggleButton>
-        <ToggleButton value={4} aria-label="justified" disabled>
+        </MyTogun>
+        <MyTogun value={4} aria-label="justified">
           <span>10:30am</span>
-        </ToggleButton>
+        </MyTogun>
       </ToggleButtonGroup>
     </div>
   );
