@@ -9,6 +9,7 @@
     "@material-ui/icons": "4.4.1",
     "@material-ui/lab": "4.0.0-alpha.26",
     "@material-ui/styles": "latest",
+    "clsx": "1.0.4",
     "react": "latest",
     "react-dom": "latest"
   },

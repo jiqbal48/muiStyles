@@ -1,20 +1,9 @@
 import React from "react";
+import clsx from "clsx";
 import ToggleButton from "@material-ui/lab/ToggleButton";
-import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
-import { styled, makeStyles } from "@material-ui/styles";
+import MyToggleGroup from "./overriddenTGroup";
+import { makeStyles } from "@material-ui/styles";
 
-// custom components
-const MyTogun = styled(ToggleButton)({
-  border: "2px solid cornflowerblue",
-  borderRadius: 3,
-  height: 48,
-  padding: "0 30px",
-  margin: "0 15px"
-});
-const MyTogunGroup = styled(ToggleButtonGroup)({
-  display: "flex",
-  flexWrap: "wrap"
-});
 const classDefinitions = {
   myTogun: {
     border: "2px solid cornflowerblue",
@@ -22,11 +11,7 @@ const classDefinitions = {
     height: 48,
     padding: "0 30px",
     margin: "0 15px",
-    color: "dimgray"
-  },
-  myTogunGroup: {
-    display: "flex",
-    flexWrap: "wrap"
+    color: "gold"
   }
 };
 const useStyles = makeStyles(classDefinitions);
@@ -35,11 +20,11 @@ const useStyles = makeStyles(classDefinitions);
 export default function MySuperCoolToggleButtons() {
   // use styles hook
   const classes = useStyles();
-
   // personal state/backyard using hooks
   const [timeSlot, chooseTimeSlot] = React.useState(1);
   const handleTimeSelection = (event, newAlignment) => {
     chooseTimeSlot(newAlignment);
+    console.log("newly chosen timeslot: ", timeSlot);
   };
 
   // template
@@ -53,7 +38,7 @@ export default function MySuperCoolToggleButtons() {
         display: "flex"
       }}
     >
-      <ToggleButtonGroup
+      <MyToggleGroup
         value={timeSlot}
         exclusive
         onChange={handleTimeSelection}
@@ -116,7 +101,7 @@ export default function MySuperCoolToggleButtons() {
         >
           <span>10:30am</span>
         </ToggleButton>
-      </ToggleButtonGroup>
+      </MyToggleGroup>
     </div>
   );
 }
