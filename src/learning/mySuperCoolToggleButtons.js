@@ -1,5 +1,4 @@
 import React from "react";
-import clsx from "clsx";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import MyToggleGroup from "./overriddenTGroup";
 import { makeStyles } from "@material-ui/styles";

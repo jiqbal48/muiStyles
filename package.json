@@ -10,6 +10,7 @@
     "@material-ui/lab": "4.0.0-alpha.26",
     "@material-ui/styles": "latest",
     "clsx": "1.0.4",
+    "date-fns": "2.2.1",
     "react": "latest",
     "react-dom": "latest"
   },
