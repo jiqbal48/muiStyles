@@ -1,5 +1,6 @@
 import { fromUnixTime, lightFormat } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
+import * as R from "ramda";
 
 export const mockStringsResource = [
   {
@@ -390,7 +391,25 @@ export const responseAvailableTimes = {
   timezone: "America/Phoenix"
 };
 export const helpers = {
-  getReadableTimeFromDate: date => lightFormat(date, "H:mm aa").toLowerCase()
+  constants: {
+    MORNING: 9,
+    AFTERNOON: 12,
+    EVENING: 17
+  },
+  getReadableDate: date => lightFormat(date, "yyyy-MM-dd"),
+  getReadableTime: date => lightFormat(date, "H:mm aa").toLowerCase(),
+  getTimeOfDay: date => {
+    const hours = date.getHours();
+    if (hours < helpers.constants.AFTERNOON) {
+      // displays morning for anything below 12
+      return "morning";
+    } else if (hours < helpers.constants.EVENING) {
+      // displays morning for anything including 12 to 5. not including 5
+      return "afternoon";
+    } else {
+      return "evening";
+    }
+  }
 };
 export const responseAvailableTimesSmall = {
   availableTimes: [1569944400, 1569945600, 1570118400, 1570119600, 1570120800],
@@ -409,9 +428,17 @@ export const getDates = ({ availableTimes, timezone }) => {
 // transform api respone to new format need for this app
 export const transformedApiResponse = ({ availableTimes, timezone }) => {
   const reduceDate = (datesAndTimes, dateobj) => {
-    const dateString = lightFormat(dateobj, "yyyy-MM-dd");
-    const time = "7:30am";
-    return {};
+    const dateString = helpers.getReadableDate(dateobj);
+    const time = helpers.getReadableTime(dateobj);
+    const timeOfDay = helpers.getTimeOfDay(dateobj);
+
+    const timeSlotsForThisDay = datesAndTimes[dateString];
+    datesAndTimes = {
+      ...datesAndTimes,
+      [dateString]: {
+        ...timeSlotsForThisDay
+      }
+    };
   };
 
   // map timestamps to dates and then reduce those dates to an obj.
@@ -432,20 +459,14 @@ const time = fromUnixTime(1568991600);
 console.log("new york time: ", time);
 const dateObjInPhoenix = utcToZonedTime(time, "America/Phoenix");
 console.log("phoenix time: ", dateObjInPhoenix);
-console.log(
-  "time in Phoenix",
-  dateObjInPhoenix.toLocaleTimeString("en-US", { timeStyle: "short" })
-);
-console.log(
-  "date in Phoenix date-fns",
-  lightFormat(dateObjInPhoenix, "yyyy-MM-dd")
-);
-console.log(
-  "time in Phoenix date-fns",
-  lightFormat(dateObjInPhoenix, "H:mm aa").toLowerCase()
-);
-console.log(
-  "time in Phoenix date-fns",
-  helpers.getReadableTimeFromDate(dateObjInPhoenix)
-);
+console.log("readable date", helpers.getReadableDate(dateObjInPhoenix));
+console.log("readable time", helpers.getReadableTime(dateObjInPhoenix));
 console.log("dates: ", getDates(responseAvailableTimesSmall));
+
+console.log("Lenses ---------------");
+const obj = {
+  "2019-09-20": "bob"
+};
+const supercoolLens = R.lensPath("2019-09-20", "morning");
+console.log(obj["2019-09-20"].morning[0]);
+console.log(R.view(supercoolLens, obj));

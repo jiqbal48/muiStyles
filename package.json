@@ -12,6 +12,7 @@
     "clsx": "1.0.4",
     "date-fns": "2.2.1",
     "date-fns-tz": "1.0.7",
+    "ramda": "0.26.1",
     "react": "latest",
     "react-dom": "latest"
   },
