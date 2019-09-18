@@ -112,11 +112,7 @@ export const mockStringsResource = [
     html: false
   }
 ];
-export const responseAvailableTimes = {
-  availableTimes: [
-    1572448800,
-    1572450000,
-    1572451200,
+/*
     1572452400,
     1572453600,
     1572454800,
@@ -134,6 +130,12 @@ export const responseAvailableTimes = {
     1572625200,
     1572626400,
     1572627600
+ */
+export const responseAvailableTimes = {
+  availableTimes: [
+    1572448800,
+    1572450000,
+    1572451200,
   ],
   timezone: "America/Phoenix"
 };
@@ -143,9 +145,11 @@ export const helpers = {
     AFTERNOON: 12,
     EVENING: 17
   },
-  getReadableDateInTimezone: (timestamp, timezone) => {
-    const dateInTimezone = utcToZonedTime(fromUnixTime(timestamp), timezone);
-    return lightFormat(dateInTimezone, "yyyy-MM-dd");
+  getDateInTimezone: (timestamp, zone) => {
+    return utcToZonedTime(fromUnixTime(timestamp), zone);
+  },
+  getReadableDate: (date) => {
+    return lightFormat(date, "yyyy-MM-dd");
   },
   getReadableTime: date => lightFormat(date, "H:mm aa").toLowerCase(),
   getTimeOfDay: date => {
@@ -161,29 +165,59 @@ export const helpers = {
     }
   }
 };
-export const responseAvailableTimesSmall = {
-  availableTimes: [1569944400, 1569945600, 1570118400, 1570119600, 1570120800],
-  timezone: "America/Phoenix"
-};
-
-export const getDates = ({ availableTimes, timezone }) => {
-  const dates = availableTimes.map(timestamp => {
-    const dateInTimezone = utcToZonedTime(fromUnixTime(timestamp), timezone);
-    return dateInTimezone;
-  });
-  // return an array of dates
-  return dates;
-};
 
 // transform api respone to new format need for this app
-export const transformedApiResponse = ({ availableTimes, timezone }) => {
+export const transformedApiResponse = ({ availableTimes, timezone:zone }) => {
+  debugger;
+  // reducer function
   const reduceDate = (datesAndTimes, timestamp) => {
-    const readableDate = helpers.getReadableDate(timestamp);
+    const dateObj = helpers.getDateInTimezone(timestamp, zone);
+    const readableDate = helpers.getReadableDate(dateObj);
     const readableTime = helpers.getReadableTime(timestamp);
     const timeOfDay = helpers.getTimeOfDay(timestamp);
 
+    /*
+    example data struct
+    {
+    '2019-09-02': {
+        morning: {
+          '7:30 am': 123412341234,
+          '7:30 am': 123412341234,
+          '7:30 am': 123412341234,
+        },
+        afternoon: {
+          '7:30 am': 123412341234,
+          '7:30 am': 123412341234,
+          '7:30 am': 123412341234,
+        },
+        evening: {
+          '7:30 am': 123412341234,
+          '7:30 am': 123412341234,
+          '7:30 am': 123412341234,
+        }
+      },
+          '2019-09-02': {
+        morning: {
+          '7:30 am': 123412341234,
+          '7:30 am': 123412341234,
+          '7:30 am': 123412341234,
+        },
+        afternoon: {
+          '7:30 am': 123412341234,
+          '7:30 am': 123412341234,
+          '7:30 am': 123412341234,
+        },
+        evening: {
+          '7:30 am': 123412341234,
+          '7:30 am': 123412341234,
+          '7:30 am': 123412341234,
+        }
+      }
+    }
+     */
     const timeSlotLens = R.lensPath([readableDate, timeOfDay, readableTime]);
-    // const newDatesAndTimes = R.set(timeSlotLens, , game)
+    const newDatesAndTimes = R.set(timeSlotLens, timestamp, datesAndTimes);
+    return newDatesAndTimes;
   };
 
   // map timestamps to dates and then reduce those dates to an obj.
@@ -199,10 +233,7 @@ const time = fromUnixTime(1568991600);
 console.log("new york time: ", time);
 const dateObjInPhoenix = utcToZonedTime(time, "America/Phoenix");
 console.log("phoenix time: ", dateObjInPhoenix);
-console.log("readable date", helpers.getReadableDateInTimezone(1568991600));
-console.log("readable time", lightFormat(dateObjInPhoenix, "H:mm aa"));
-console.log("dates: ", getDates(responseAvailableTimesSmall));
-console.log("going back to timestamp: ", getUnixTime(dateObjInPhoenix));
+console.log("transformed Obj: ", transformedApiResponse(responseAvailableTimes));
 
 console.log("Lenses ---------------");
 const obj = {
@@ -215,3 +246,4 @@ const obj = {
 const supercoolLens = R.lensPath(["2019-09-20", "morning", "7:30 am"]);
 console.log(obj["2019-09-20"].morning);
 console.log(R.view(supercoolLens, obj));
+console.log("Lenses --------------- END");
