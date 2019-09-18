@@ -389,7 +389,9 @@ export const responseAvailableTimes = {
   ],
   timezone: "America/Phoenix"
 };
-
+export const helpers = {
+  getReadableTimeFromDate: date => lightFormat(date, "H:mm aa").toLowerCase()
+};
 export const responseAvailableTimesSmall = {
   availableTimes: [1569944400, 1569945600, 1570118400, 1570119600, 1570120800],
   timezone: "America/Phoenix"
@@ -404,20 +406,22 @@ export const getDates = ({ availableTimes, timezone }) => {
   return dates;
 };
 
-// transform api respone to new format
-/*
-{
-
-}
-*/
+// transform api respone to new format need for this app
 export const transformedApiResponse = ({ availableTimes, timezone }) => {
-  const dateAndTimes = availableTimes.map(timestamp => {
-    const dateInTimezone = utcToZonedTime(fromUnixTime(timestamp), timezone);
-    return dateInTimezone;
-  });
-  // .reduce(reduceDate, {});
-  // return an array of dates
-  return dateAndTimes;
+  const reduceDate = (datesAndTimes, dateobj) => {
+    const dateString = lightFormat(dateobj, "yyyy-MM-dd");
+    const time = "7:30am";
+    return {};
+  };
+
+  // map timestamps to dates and then reduce those dates to an obj.
+  // obj of datestrings mapping to an object representing the available times in the day (seperated by morn, afternoon, evening)
+  return availableTimes
+    .map(timestamp => {
+      const dateInTimezone = utcToZonedTime(fromUnixTime(timestamp), timezone);
+      return dateInTimezone;
+    })
+    .reduce(reduceDate, {});
 };
 
 // 1568991600 timestamp -> sept 20, 2019. 11am in New York, but 8am in Phoenix.
@@ -426,61 +430,22 @@ const timestamp1 = 1568991600;
 console.log("hi!");
 const time = fromUnixTime(1568991600);
 console.log("new york time: ", time);
-const timeinzone = utcToZonedTime(time, "America/Phoenix");
-console.log("phoenix time: ", timeinzone);
-// console.log("dates: ", getDates(responseAvailableTimesSmall));
-
-const reduceDate = (dateAndTimes, dateobj) => {
-  const dateString = lightFormat(dateobj, "yyyy-MM-dd");
-  return dateString;
-};
-console.log("iso format", reduceDate({}, timeinzone));
-
-/*
-scheduleAppt.action.backToDashboard
-scheduleAppt.topBar.selectLocation
-scheduleAppt.topBar.preRegistrationQuestions
-scheduleAppt.topBar.selectDateTime
-scheduleAppt.action.chooseDifferentLocation
-scheduleAppt.selectTimeSection.title
-scheduleAppt.selectTimeSection.messageAboutTimeZone
-scheduleAppt.action.scheduleAppt
-scheduleAppt.action.differentLocation
-date.daytime.morning
-date.daytime.afternoon
-date.daytime.evening
-*/
-
-/*
-Dashboard
-SELECT A LOCATION
-PRE-REGISTRATION QUESTIONS
-SELECT DATE & TIME
-Choose different location
-Select time
-All times listed below are in the selected location’s local time zone
-Schedule
-We’re sorry but there are no appointment times available. Please choose a
-different location.
-
-Panel de control
-SELECCIONAR UNA UBICACIÓN
-PREGUNTAS DE PREREGISTRO
-SELECCIONAR FECHA Y HORA
-Elija otra ubicación
-Elija la hora
-Los siguientes horarios están en la hora local de la ubicación elegida.
-Programar
-Lo sentimos, pero no hay horarios de citas disponibles. Por favor, elija una ubicación diferente
-ubicación diferente.
-
-
-Morning
-Afternoon
-Evening
-
-Mañana
-Tarde
-Noche
-
-*/
+const dateObjInPhoenix = utcToZonedTime(time, "America/Phoenix");
+console.log("phoenix time: ", dateObjInPhoenix);
+console.log(
+  "time in Phoenix",
+  dateObjInPhoenix.toLocaleTimeString("en-US", { timeStyle: "short" })
+);
+console.log(
+  "date in Phoenix date-fns",
+  lightFormat(dateObjInPhoenix, "yyyy-MM-dd")
+);
+console.log(
+  "time in Phoenix date-fns",
+  lightFormat(dateObjInPhoenix, "H:mm aa").toLowerCase()
+);
+console.log(
+  "time in Phoenix date-fns",
+  helpers.getReadableTimeFromDate(dateObjInPhoenix)
+);
+console.log("dates: ", getDates(responseAvailableTimesSmall));
