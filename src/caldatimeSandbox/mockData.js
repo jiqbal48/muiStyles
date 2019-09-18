@@ -1,3 +1,6 @@
+import { fromUnixTime, lightFormat } from "date-fns";
+import { utcToZonedTime } from "date-fns-tz";
+
 export const mockStringsResource = [
   {
     keyName: "scheduleAppt.action.backToDashboard",
@@ -386,10 +389,52 @@ export const responseAvailableTimes = {
   ],
   timezone: "America/Phoenix"
 };
-export const smallTimes = {
-  timezone: "America/Phoenix",
-  times: [1572277200, 1572278400, 1572279600, 1572280800]
+
+export const responseAvailableTimesSmall = {
+  availableTimes: [1569944400, 1569945600, 1570118400, 1570119600, 1570120800],
+  timezone: "America/Phoenix"
 };
+
+export const getDates = ({ availableTimes, timezone }) => {
+  const dates = availableTimes.map(timestamp => {
+    const dateInTimezone = utcToZonedTime(fromUnixTime(timestamp), timezone);
+    return dateInTimezone;
+  });
+  // return an array of dates
+  return dates;
+};
+
+// transform api respone to new format
+/*
+{
+
+}
+*/
+export const transformedApiResponse = ({ availableTimes, timezone }) => {
+  const dateAndTimes = availableTimes.map(timestamp => {
+    const dateInTimezone = utcToZonedTime(fromUnixTime(timestamp), timezone);
+    return dateInTimezone;
+  });
+  // .reduce(reduceDate, {});
+  // return an array of dates
+  return dateAndTimes;
+};
+
+// 1568991600 timestamp -> sept 20, 2019. 11am in New York, but 8am in Phoenix.
+// need to get phoenix.
+const timestamp1 = 1568991600;
+console.log("hi!");
+const time = fromUnixTime(1568991600);
+console.log("new york time: ", time);
+const timeinzone = utcToZonedTime(time, "America/Phoenix");
+console.log("phoenix time: ", timeinzone);
+// console.log("dates: ", getDates(responseAvailableTimesSmall));
+
+const reduceDate = (dateAndTimes, dateobj) => {
+  const dateString = lightFormat(dateobj, "yyyy-MM-dd");
+  return dateString;
+};
+console.log("iso format", reduceDate({}, timeinzone));
 
 /*
 scheduleAppt.action.backToDashboard
