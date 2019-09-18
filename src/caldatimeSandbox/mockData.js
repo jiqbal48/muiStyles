@@ -168,13 +168,14 @@ export const helpers = {
 
 // transform api respone to new format need for this app
 export const transformedApiResponse = ({ availableTimes, timezone:zone }) => {
-  debugger;
+
   // reducer function
   const reduceDate = (datesAndTimes, timestamp) => {
+    debugger;
     const dateObj = helpers.getDateInTimezone(timestamp, zone);
     const readableDate = helpers.getReadableDate(dateObj);
-    const readableTime = helpers.getReadableTime(timestamp);
-    const timeOfDay = helpers.getTimeOfDay(timestamp);
+    const readableTime = helpers.getReadableTime(dateObj);
+    const timeOfDay = helpers.getTimeOfDay(dateObj);
 
     /*
     example data struct
