@@ -1,4 +1,4 @@
-import { getUnixTime, fromUnixTime, lightFormat } from "date-fns";
+import { fromUnixTime, lightFormat } from "date-fns";
 import { utcToZonedTime } from "date-fns-tz";
 import * as R from "ramda";
 
@@ -146,86 +146,29 @@ export const helpers = {
     }
   }
 };
-
 // transform api respone to new format need for this app
 export const transformedApiResponse = ({ availableTimes, timezone:zone }) => {
-
   // reducer function
-  const reduceDate = (datesAndTimes, timestamp) => {
+  const reducerFunction = (datesAndTimes, timestamp) => {
     // debugger;
     const dateObj = helpers.getDateInTimezone(timestamp, zone);
     const readableDate = helpers.getReadableDate(dateObj);
     const readableTime = helpers.getReadableTime(dateObj);
     const timeOfDay = helpers.getTimeOfDay(dateObj);
 
-    /*
-    example data struct
-    {
-    '2019-09-02': {
-        morning: {
-          '7:30 am': 123412341234,
-          '7:30 am': 123412341234,
-          '7:30 am': 123412341234,
-        },
-        afternoon: {
-          '7:30 am': 123412341234,
-          '7:30 am': 123412341234,
-          '7:30 am': 123412341234,
-        },
-        evening: {
-          '7:30 am': 123412341234,
-          '7:30 am': 123412341234,
-          '7:30 am': 123412341234,
-        }
-      },
-          '2019-09-02': {
-        morning: {
-          '7:30 am': 123412341234,
-          '7:30 am': 123412341234,
-          '7:30 am': 123412341234,
-        },
-        afternoon: {
-          '7:30 am': 123412341234,
-          '7:30 am': 123412341234,
-          '7:30 am': 123412341234,
-        },
-        evening: {
-          '7:30 am': 123412341234,
-          '7:30 am': 123412341234,
-          '7:30 am': 123412341234,
-        }
-      }
-    }
-     */
+    // lens
     const timeSlotLens = R.lensPath([readableDate, timeOfDay, readableTime]);
+    // datesAndTimes['2019-09-20'].morning['7:30 am'] -> error in normal js.
     const newDatesAndTimes = R.set(timeSlotLens, timestamp, datesAndTimes);
     return newDatesAndTimes;
   };
 
   // map timestamps to dates and then reduce those dates to an obj.
   // obj of datestrings mapping to an object representing the available times in the day (seperated by morn, afternoon, evening)
-  return availableTimes.reduce(reduceDate, {});
+  return availableTimes.reduce(reducerFunction, {});
 };
 
-// 1568991600 timestamp -> sept 20, 2019. 11am in New York, but 8am in Phoenix.
-// need to get phoenix.
-const timestamp1 = 1568991600;
-console.log("hi!");
-const time = fromUnixTime(1568991600);
-console.log("new york time: ", time);
-const dateObjInPhoenix = utcToZonedTime(time, "America/Phoenix");
-console.log("phoenix time: ", dateObjInPhoenix);
+
+
+
 console.log("transformed Obj: ", transformedApiResponse(responseAvailableTimes));
-
-console.log("Lenses ---------------");
-const obj = {
-  "2019-09-20": {
-    morning: {
-      "7:30 am": 1568991600
-    }
-  }
-};
-const supercoolLens = R.lensPath(["2019-09-20", "morning", "7:30 am"]);
-console.log(obj["2019-09-20"].morning);
-console.log(R.view(supercoolLens, obj));
-console.log("Lenses --------------- END");
